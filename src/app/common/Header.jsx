@@ -1,9 +1,14 @@
 "use client"
 import Link from 'next/link'
-import React from 'react'
+import React, { useContext } from 'react'
+import { loginContext } from '../loginContext/MainContext'
+
+
 
 
 export default function Header() {
+
+    let { login, setLogin } = useContext(loginContext)
     return (
         <div>
             <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -25,16 +30,37 @@ export default function Header() {
                                 <li>
                                     <Link href={'/course'}>  <a href="#" className="hover:no-underline text-gray-900 dark:text-white ">Course</a> </Link>
                                 </li>
+                                <li>
+                                    <Link href={'/enquiry'}>  <a href="#" className="hover:no-underline text-gray-900 dark:text-white ">Enquiry</a> </Link>
+                                </li>
+
+
+                                <li>
+                                    <Link href={'/enquiry-details'}>  <a href="#" className="hover:no-underline text-gray-900 dark:text-white ">Enquiry Details</a> </Link>
+                                </li>
                             </ul>
                         </div>
                     </div>
                     <div className="flex items-center space-x-6 rtl:space-x-reverse">
-                        <Link href={'/login'} className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">
-                            Login
-                        </Link>
-                        <Link href={'/register'} className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">
-                            Register
-                        </Link>
+                        <ul className='flex gap-4'>
+                        {
+                            login !== null ?
+                                <>
+                                    <li onClick={() => setLogin(null)} className='text-white cursor-pointer'>Logout</li>
+                                </>
+                                :
+                                <>
+                                    <li><Link href={'/signup'} className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">
+                                        Sign-Up
+                                    </Link></li>
+                                    <li> <Link href={'/sign-in'} className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">
+                                        Login
+                                    </Link></li>
+                                </>
+
+                        }
+                        </ul>
+                        
                     </div>
                 </div>
             </nav>

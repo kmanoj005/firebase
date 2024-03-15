@@ -1,31 +1,30 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import Link from 'next/link';
 import { app } from '../FirebaseConfig';
 import generateUniqueId from 'generate-unique-id';
+import { useRouter } from 'next/navigation'
 
 
-export default function Register() {
+export default function Enquiry() {
+    const router = useRouter();
     const db = getDatabase(app);
     const [users, setUsers] = useState([]);
 
     const saveData = (event) => {
-       
-
         const uId = generateUniqueId();
         const name = event.target.name.value;
         const email = event.target.email.value;
         const phone = event.target.phone.value;
-        const password = event.target.password.value;
+        const message = event.target.message.value;
 
         try {
-            set(ref(db, 'users/' + uId), {
+            set(ref(db, 'enquiry/' + uId), {
                 name,
                 email,
                 phone,
-                password
+                message
             });
         }
         catch {
@@ -37,39 +36,17 @@ export default function Register() {
         event.preventDefault();
     };
 
-    const getUserData = () => {
-        const userListData = [];
-        const userData = ref(db, 'users/');
-        onValue(userData, (enValue) => {
-            const data = enValue.val();
-
-            for (let key in data) {
-                let obj = data[key];
-                obj['key'] = key;
-                userListData.push(obj);
-            }
-            setUsers(userListData);
-        });
-    };
-
-    useEffect(() => {
-        getUserData();
-    }, []);
+   
 
     return (
         <>
-            <div className='grid grid-cols-2 gap-4'>
-                <div className="bg-gray-100 flex items-center justify-center h-screen">
+            <div className='grid grid-cols-2 '>
+                <div className="bg-gray-100 flex col-span-2 justify-center h-screen">
                     <div className="bg-white p-4 rounded-lg shadow-lg max-w-[500px] px-8">
                         <div className="flex flex-col items-center">
-                            <h1 className="text-4xl font-bold mb-8">Registration Form</h1>
-
-                            <div className=" ">
-                                <button className="flex items-center justify-center px-4  bg-gray-800 text-white rounded-lg shadow-md hover:bg-opacity-75">Sign up with Google</button>
-                            </div>
+                            <h1 className="text-4xl font-bold ">Enquiry Form</h1>
 
                             <div className="flex items-center justify-center mt-6 text-gray-500">
-                                <span className="mr-2">or</span>
                                 <hr className="w-full h-px bg-gray-300" />
                             </div>
 
@@ -90,8 +67,9 @@ export default function Register() {
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <label htmlFor="password" className="mb-2 text-sm font-medium">Your password</label>
-                                    <input type="password" id="password" name='password' className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm w-full" />
+                                    <label htmlFor="message" className="mb-2 text-sm font-medium">Your message</label>
+                                    <textarea name="message" id="message" cols="30" rows="4" placeholder='Type your message' className='px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm w-full'></textarea>
+                                    {/* <input type="" id="message" name='message' className="" /> */}
                                 </div>
 
                                 <div className="flex items-center space-x-2">
@@ -108,34 +86,7 @@ export default function Register() {
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div className='bg-gray-100 mt-[80px] items-center justify-center'>
-                    <table className='w-full text-sm text-left rtl:text-right px-[50px]'>
-                        <thead className='text-md text-center uppercase bg-gray-50 dark:text-gray-800'>
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.length > 0 ?
-                                users.map((item, index) => (
-                                    <tr key={index}>
-                                        <td className=' pb-3 '>{item.key}</td>
-                                        <td className=' pb-3 '>{item.name}</td>
-                                        <td className=' pb-3 '>{item.email}</td>
-                                        <td className=' pb-3 '>{item.phone}</td>
-                                    </tr>
-                                )) :
-                                <tr>
-                                    <td colSpan="4">No data</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    
                 </div>
             </div>
         </>
